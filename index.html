@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="deployment-status" content="force-refresh">
     <title>Potato Typer Deluxe</title>
     <style>
+        /* CSS: The styling and layout of your game */
         body {
             background-color: black; color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -222,26 +224,23 @@
     </div>
 
     <script>
-        // --- GAME VARIABLES ---
+        // JAVASCRIPT: The brain of the game
         const words = [
             "potato", "spud", "french fries", "tater tot", "mashed", 
             "keyboard", "typing", "javascript", "developer", "awesome",
             "crispy", "hashbrown", "starch", "yummy", "farming",
-            // Minecraft terms added here!
             "creeper", "diamond pickaxe", "obsidian", "redstone", "enderman", 
             "nether", "ghast", "zombie", "skeleton", "iron block", "gold ingot", 
             "emerald", "crafting table", "furnace", "steve", "alex", "village", 
             "stronghold", "nether portal", "ender dragon", "survival", "creative"
         ];
         
-        // Expanded to include bad words filter for player names
         const badWords = ["dick", "fuck", "bitch", "shit", "ass", "crap"];
         
         let playerName = "";
         let money = 0;
         let moneyPerWord = 5;
         
-        // Math logic for Better Potatoes cap ($100 max)
         let currentMoneyUpgradeLevel = 0;
         const MAX_MONEY_LEVEL = 10; 
 
@@ -266,20 +265,14 @@
         const typingInput = document.getElementById("typing-input");
 
         // --- MATH FUNCTIONS FOR UPGRADES ---
-        function getNextMoneyAmount() {
-            return (currentMoneyUpgradeLevel + 1) * 10;
-        }
-
-        function getMoneyUpgradeCost() {
-            return (currentMoneyUpgradeLevel + 1) * 100;
-        }
+        function getNextMoneyAmount() { return (currentMoneyUpgradeLevel + 1) * 10; }
+        function getMoneyUpgradeCost() { return (currentMoneyUpgradeLevel + 1) * 100; }
 
         // --- NAME SETUP ---
         function submitName() {
             const inputName = document.getElementById("name-input").value.trim();
             const lowerName = inputName.toLowerCase();
             
-            // Check for blanks and bad words
             if (inputName === "") return;
             let isBad = badWords.some(word => lowerName.includes(word));
 
@@ -289,14 +282,13 @@
                 playerName = inputName;
                 document.getElementById("name-modal").style.display = "none";
                 document.getElementById("player-title").textContent = playerName + "'s Farm";
-                saveGame();
-                typingInput.focus();
+                saveGame(); typingInput.focus();
             }
         }
 
         // --- SAVE / LOAD / SYSTEM ---
         function saveGame() {
-            if (!playerName) return; // Don't save if they haven't picked a name yet
+            if (!playerName) return; 
             
             const gameData = {
                 playerName: playerName, money: money, moneyPerWord: moneyPerWord,
@@ -307,27 +299,19 @@
             localStorage.setItem("potatoTyperSave", JSON.stringify(gameData));
             
             const notify = document.getElementById("save-notify");
-            notify.style.opacity = 1;
-            setTimeout(() => notify.style.opacity = 0, 1500);
+            notify.style.opacity = 1; setTimeout(() => notify.style.opacity = 0, 1500);
         }
 
         function loadGame() {
             const savedData = localStorage.getItem("potatoTyperSave");
             if (savedData) {
                 const gameData = JSON.parse(savedData);
-                playerName = gameData.playerName || "";
-                money = gameData.money || 0;
-                moneyPerWord = gameData.moneyPerWord || 5;
-                currentMoneyUpgradeLevel = gameData.currentMoneyUpgradeLevel || 0;
-                aiPieces = gameData.aiPieces || 0;
-                aiSpeed = gameData.aiSpeed || 1;
-                aiUnlocked = gameData.aiUnlocked || false;
-                hasCheated = gameData.hasCheated || false;
+                playerName = gameData.playerName || ""; money = gameData.money || 0;
+                moneyPerWord = gameData.moneyPerWord || 5; currentMoneyUpgradeLevel = gameData.currentMoneyUpgradeLevel || 0;
+                aiPieces = gameData.aiPieces || 0; aiSpeed = gameData.aiSpeed || 1;
+                aiUnlocked = gameData.aiUnlocked || false; hasCheated = gameData.hasCheated || false;
 
-                if (playerName !== "") {
-                    document.getElementById("player-title").textContent = playerName + "'s Farm";
-                }
-
+                if (playerName !== "") document.getElementById("player-title").textContent = playerName + "'s Farm";
                 if (hasCheated) document.getElementById("cheater-bar").style.display = "block";
 
                 if (aiUnlocked) {
@@ -337,63 +321,44 @@
                     document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost();
                     document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed + 1) + " letters/sec.";
                     document.getElementById("ai-speed-display").textContent = aiSpeed;
-                    getNewAIWord();
-                    startAILoop();
+                    getNewAIWord(); startAILoop();
                 } else {
                     document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
                 }
             }
             
-            // Check if we need to ask for name
             if (!playerName) {
-                document.getElementById("name-modal").style.display = "flex";
-                document.getElementById("name-input").focus();
-            } else {
-                typingInput.focus();
-            }
+                document.getElementById("name-modal").style.display = "flex"; document.getElementById("name-input").focus();
+            } else { typingInput.focus(); }
         }
 
         setInterval(saveGame, 5000);
 
         function exportSave() {
-            saveGame();
-            const savedData = localStorage.getItem("potatoTyperSave");
+            saveGame(); const savedData = localStorage.getItem("potatoTyperSave");
             const blob = new Blob([savedData], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            
-            // Replaces spaces/weird characters with underscores to keep the file name clean
+            const url = URL.createObjectURL(blob); const a = document.createElement("a");
             let safeName = playerName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             a.download = `${safeName}_${money}_save.json`;
-            
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            typingInput.focus();
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url); typingInput.focus();
         }
 
         function importSave(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    localStorage.setItem("potatoTyperSave", JSON.stringify(data));
-                    location.reload(); 
+                    localStorage.setItem("potatoTyperSave", JSON.stringify(data)); location.reload(); 
                 } catch (err) { alert("Invalid save file!"); }
             };
-            reader.readAsText(file);
-            event.target.value = ''; 
+            reader.readAsText(file); event.target.value = ''; 
         }
 
         function showRestartModal() { document.getElementById("restart-modal").style.display = "flex"; }
         function closeRestartModal() { document.getElementById("restart-modal").style.display = "none"; typingInput.focus(); }
-        function confirmRestart() {
-            localStorage.removeItem("potatoTyperSave");
-            location.reload(); 
-        }
+        function confirmRestart() { localStorage.removeItem("potatoTyperSave"); location.reload(); }
 
         // --- ADMIN SYSTEM ---
         function toggleAdminMode() {
@@ -403,8 +368,7 @@
                 document.getElementById("cheater-bar").style.display = "block";
                 saveGame(); updateUI();
             } else {
-                document.getElementById("admin-modal").style.display = "flex";
-                document.getElementById("admin-pass-input").focus();
+                document.getElementById("admin-modal").style.display = "flex"; document.getElementById("admin-pass-input").focus();
             }
         }
 
@@ -418,27 +382,23 @@
                     document.getElementById("admin-btn").textContent = "Exit Admin Mode";
                     moneyContainer.classList.add("admin-active"); typingInput.focus();
                 } else {
-                    adminAttempts++; this.value = "";
-                    if (adminAttempts >= 3) lockoutAdmin();
+                    adminAttempts++; this.value = ""; if (adminAttempts >= 3) lockoutAdmin();
                 }
             } else if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault(); adminAttempts++; this.value = "";
-                if (adminAttempts >= 3) lockoutAdmin();
+                e.preventDefault(); adminAttempts++; this.value = ""; if (adminAttempts >= 3) lockoutAdmin();
             }
         });
 
         function lockoutAdmin() {
             isLockedOut = true; document.getElementById("admin-pass-input").disabled = true;
             document.getElementById("lockout-msg").style.display = "block";
-            let timeLeft = 60; const timerSpan = document.getElementById("lockout-timer");
-            timerSpan.textContent = timeLeft;
+            let timeLeft = 60; const timerSpan = document.getElementById("lockout-timer"); timerSpan.textContent = timeLeft;
             const countdown = setInterval(() => {
                 timeLeft--; timerSpan.textContent = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(countdown); isLockedOut = false; adminAttempts = 0;
                     document.getElementById("admin-pass-input").disabled = false;
-                    document.getElementById("lockout-msg").style.display = "none";
-                    document.getElementById("admin-pass-input").focus();
+                    document.getElementById("lockout-msg").style.display = "none"; document.getElementById("admin-pass-input").focus();
                 }
             }, 1000);
         }
@@ -454,11 +414,9 @@
             });
             editInput.addEventListener("keydown", function(e) {
                 if (e.key === "Enter") {
-                    let val = parseInt(this.value, 10); if (isNaN(val)) val = money;
-                    pendingMoneyVal = val;
+                    let val = parseInt(this.value, 10); if (isNaN(val)) val = money; pendingMoneyVal = val;
                     document.getElementById("admin-confirm-modal").style.display = "flex";
-                    document.getElementById("admin-confirm-input").value = "";
-                    document.getElementById("admin-confirm-input").focus();
+                    document.getElementById("admin-confirm-input").value = ""; document.getElementById("admin-confirm-input").focus();
                 }
             });
         }
@@ -469,8 +427,7 @@
                     money = pendingMoneyVal; document.getElementById("admin-confirm-modal").style.display = "none";
                     updateUI(); saveGame(); typingInput.focus();
                 } else {
-                    document.getElementById("admin-confirm-modal").style.display = "none";
-                    updateUI(); typingInput.focus();
+                    document.getElementById("admin-confirm-modal").style.display = "none"; updateUI(); typingInput.focus();
                 }
             }
         });
@@ -478,9 +435,7 @@
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', function(e) {
                 if (e.target === this && this.id !== "name-modal") {
-                    this.style.display = "none";
-                    if (this.id === "admin-confirm-modal") updateUI();
-                    typingInput.focus();
+                    this.style.display = "none"; if (this.id === "admin-confirm-modal") updateUI(); typingInput.focus();
                 }
             });
         });
@@ -500,32 +455,21 @@
         }
 
         // --- CORE GAMEPLAY ---
-        function getNewWord() {
-            currentWord = words[Math.floor(Math.random() * words.length)];
-            wordDisplay.textContent = currentWord;
-        }
+        function getNewWord() { currentWord = words[Math.floor(Math.random() * words.length)]; wordDisplay.textContent = currentWord; }
 
         typingInput.addEventListener("keydown", function(event) {
-            if (!playerName) return; // Stop typing if they haven't picked a name
+            if (!playerName) return; 
             if (event.key === "Enter") {
                 const typedText = typingInput.value.trim().toLowerCase();
-                if (typedText === currentWord.toLowerCase()) {
-                    addMoney(moneyPerWord); spawnParticle(moneyPerWord, false); getNewWord();
-                }
+                if (typedText === currentWord.toLowerCase()) { addMoney(moneyPerWord); spawnParticle(moneyPerWord, false); getNewWord(); }
                 typingInput.value = "";
             }
         });
 
-        function addMoney(amount) {
-            money += amount; if (money > MAX_MONEY) money = MAX_MONEY;
-            updateUI();
-        }
+        function addMoney(amount) { money += amount; if (money > MAX_MONEY) money = MAX_MONEY; updateUI(); }
 
         function updateUI() {
-            if (!document.getElementById("money-edit-input")) {
-                moneyContainer.innerHTML = `Money: $<span id="money">${money.toLocaleString()}</span>`;
-            }
-            
+            if (!document.getElementById("money-edit-input")) moneyContainer.innerHTML = `Money: $<span id="money">${money.toLocaleString()}</span>`;
             aiPiecesDisplay.textContent = aiPieces;
             
             if (currentMoneyUpgradeLevel < MAX_MONEY_LEVEL) {
@@ -548,13 +492,7 @@
         function buyMoneyUpgrade() {
             if (currentMoneyUpgradeLevel >= MAX_MONEY_LEVEL) return;
             const cost = getMoneyUpgradeCost();
-            
-            if (money >= cost) {
-                money -= cost;
-                moneyPerWord = getNextMoneyAmount();
-                currentMoneyUpgradeLevel++;
-                updateUI(); saveGame();
-            }
+            if (money >= cost) { money -= cost; moneyPerWord = getNextMoneyAmount(); currentMoneyUpgradeLevel++; updateUI(); saveGame(); }
         }
 
         function getAIPieceCost() { return (aiPieces + 1) * 1000; }
@@ -563,8 +501,7 @@
             if (aiUnlocked) return; const cost = getAIPieceCost();
             if (money >= cost) {
                 money -= cost; aiPieces++;
-                if (aiPieces >= 100) unlockAI();
-                else document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
+                if (aiPieces >= 100) unlockAI(); else document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
                 updateUI(); saveGame();
             }
         }
@@ -590,14 +527,10 @@
             getNewAIWord(); startAILoop();
         }
 
-        function getNewAIWord() {
-            aiCurrentWord = words[Math.floor(Math.random() * words.length)];
-            aiTypedIndex = 0; renderAIWord();
-        }
+        function getNewAIWord() { aiCurrentWord = words[Math.floor(Math.random() * words.length)]; aiTypedIndex = 0; renderAIWord(); }
 
         function renderAIWord() {
-            const typedPart = aiCurrentWord.substring(0, aiTypedIndex);
-            const untypedPart = aiCurrentWord.substring(aiTypedIndex);
+            const typedPart = aiCurrentWord.substring(0, aiTypedIndex); const untypedPart = aiCurrentWord.substring(aiTypedIndex);
             document.getElementById("ai-word-display").innerHTML = `<span class="typed-letter">${typedPart}</span>${untypedPart}`;
         }
 
@@ -606,8 +539,7 @@
             aiInterval = setInterval(() => {
                 aiTypedIndex++; renderAIWord();
                 if (aiTypedIndex >= aiCurrentWord.length) {
-                    addMoney(moneyPerWord); spawnParticle(moneyPerWord, true); 
-                    setTimeout(getNewAIWord, 200); 
+                    addMoney(moneyPerWord); spawnParticle(moneyPerWord, true); setTimeout(getNewAIWord, 200); 
                 }
             }, delay);
         }
@@ -615,28 +547,18 @@
         // Init Game
         loadGame(); getNewWord(); updateUI();
         
-        // Return focus to input when clicking outside
         document.addEventListener('click', function(event) {
-            if (!playerName) return; // Do not pull focus if name isn't set
-            const sidebar = document.getElementById('shop-sidebar');
-            const toggle = document.getElementById('shop-toggle');
+            if (!playerName) return; 
+            const sidebar = document.getElementById('shop-sidebar'); const toggle = document.getElementById('shop-toggle');
             if (!sidebar.contains(event.target) && event.target !== toggle && !event.target.classList.contains('shop-btn') && !event.target.classList.contains('system-btn') && !event.target.closest('.modal-box')) {
                 sidebar.classList.remove('open');
-                
-                // Only refocus if modals are closed
                 let modalsOpen = false;
-                document.querySelectorAll('.modal-overlay').forEach(m => {
-                    if (m.style.display === "flex") modalsOpen = true;
-                });
-                
+                document.querySelectorAll('.modal-overlay').forEach(m => { if (m.style.display === "flex") modalsOpen = true; });
                 if (!modalsOpen) typingInput.focus();
             }
         });
         
-        // Let enter key work on the name input box too
-        document.getElementById("name-input").addEventListener("keydown", function(e) {
-            if (e.key === "Enter") submitName();
-        });
+        document.getElementById("name-input").addEventListener("keydown", function(e) { if (e.key === "Enter") submitName(); });
     </script>
 </body>
 </html>
