@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Typer</title>
+    <style>
+        /* This section styles the page: black background, centered items */
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* Positions the money counter in the top right */
+        #money-container {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #4CAF50; /* Nice money green! */
+        }
+
+        /* Styles the random word */
+        #word-display {
+            font-size: 48px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* Styles the potato image */
+        #potato-img {
+            width: 250px; /* You can change this number to make the potato bigger/smaller */
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        /* Styles the typing textbox */
+        #typing-input {
+            font-size: 24px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid #555;
+            background-color: #222;
+            color: white;
+            outline: none;
+            width: 300px;
+        }
+
+        /* Changes border color when you click the textbox */
+        #typing-input:focus {
+            border-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="money-container">Money: $<span id="money">0</span></div>
+
+    <div id="word-display">Loading...</div>
+
+    <img id="potato-img" src="potato.png" alt="A glorious potato">
+
+    <input type="text" id="typing-input" placeholder="Type here..." autocomplete="off" autofocus>
+
+    <script>
+        // Here is your randomized word list! You can add as many as you want.
+        const words = [
+            "potato", "spud", "french fries", "tater tot", "mashed", 
+            "keyboard", "typing", "javascript", "developer", "awesome",
+            "crispy", "hashbrown", "starch", "yummy", "farming"
+        ];
+        
+        let currentWord = "";
+        let money = 0;
+
+        // Grab our HTML elements so JS can interact with them
+        const wordDisplay = document.getElementById("word-display");
+        const typingInput = document.getElementById("typing-input");
+        const moneyDisplay = document.getElementById("money");
+
+        // Function to pick a random word from the list
+        function getNewWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            currentWord = words[randomIndex];
+            wordDisplay.textContent = currentWord;
+        }
+
+        // Run it once to start the game
+        getNewWord();
+
+        // Listen for when the user types in the box
+        typingInput.addEventListener("keydown", function(event) {
+            // Check if the key pressed was 'Enter'
+            if (event.key === "Enter") {
+                // Get what the user typed, remove extra spaces, and make it lowercase
+                const typedText = typingInput.value.trim().toLowerCase();
+
+                // Check if they matched the word
+                if (typedText === currentWord.toLowerCase()) {
+                    money += 5; // Give them $5!
+                    moneyDisplay.textContent = money; // Update the screen
+                    getNewWord(); // Generate the next word
+                }
+
+                // Clear the textbox so they can type the next word
+                typingInput.value = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
