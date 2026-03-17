@@ -6,49 +6,30 @@
     <title>Potato Typer Deluxe</title>
     <style>
         body {
-            background-color: black;
-            color: white;
+            background-color: black; color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-            overflow-y: hidden;
+            margin: 0; overflow-x: hidden; overflow-y: hidden;
         }
         
         #cheater-bar {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            background-color: yellow;
-            color: black;
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            padding: 8px 0;
-            z-index: 9999;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            display: none; position: fixed; top: 0; left: 0; width: 100%;
+            background-color: yellow; color: black; text-align: center;
+            font-weight: bold; font-size: 18px; padding: 8px 0;
+            z-index: 9999; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
         }
 
         #game-wrapper {
-            display: flex;
-            width: 100vw;
-            height: 100vh;
-            padding-top: 20px; 
+            display: flex; width: 100vw; height: 100vh; padding-top: 20px; 
         }
 
         .screen-half {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-right: 2px solid #333;
-            position: relative;
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border-right: 2px solid #333; position: relative;
         }
 
         #admin-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            position: absolute; top: 20px; left: 20px;
             background-color: #333; color: #555;
             border: 1px solid #444; padding: 5px 10px;
             cursor: pointer; border-radius: 4px; z-index: 100;
@@ -56,26 +37,17 @@
         #admin-btn:hover { background-color: #444; color: white; }
 
         #stats-container {
-            position: absolute;
-            top: 20px;
-            right: 80px; 
-            text-align: right;
-            z-index: 10;
+            position: absolute; top: 20px; right: 80px; text-align: right; z-index: 10;
         }
 
         #money-container {
-            font-size: 28px;
-            font-weight: bold;
-            color: #4CAF50; 
-            cursor: default;
+            font-size: 28px; font-weight: bold; color: #4CAF50; cursor: default;
         }
-        
         #money-container.admin-active { cursor: pointer; text-decoration: underline dashed; }
 
         #money-edit-input {
-            font-size: 24px; font-weight: bold; color: #4CAF50;
-            background: #111; border: 1px solid #4CAF50;
-            width: 250px; text-align: right; outline: none;
+            font-size: 24px; font-weight: bold; color: #4CAF50; background: #111;
+            border: 1px solid #4CAF50; width: 250px; text-align: right; outline: none;
         }
 
         #ai-pieces-container { font-size: 16px; color: #aaa; margin-top: 5px; }
@@ -83,34 +55,31 @@
         .word-display { font-size: 48px; margin-bottom: 20px; letter-spacing: 2px; }
         .potato-img { width: 250px; height: auto; margin-bottom: 30px; }
         .typing-input {
-            font-size: 24px; padding: 10px; text-align: center;
-            border-radius: 8px; border: 2px solid #555; background-color: #222;
-            color: white; outline: none; width: 300px;
+            font-size: 24px; padding: 10px; text-align: center; border-radius: 8px;
+            border: 2px solid #555; background-color: #222; color: white;
+            outline: none; width: 300px;
         }
         .typing-input:focus { border-color: #4CAF50; }
 
         #shop-toggle {
-            position: absolute; top: 20px; right: 20px;
-            background-color: #ff9800; color: white; border: none;
-            padding: 10px 15px; font-size: 18px; border-radius: 5px;
-            cursor: pointer; z-index: 100;
+            position: absolute; top: 20px; right: 20px; background-color: #ff9800;
+            color: white; border: none; padding: 10px 15px; font-size: 18px;
+            border-radius: 5px; cursor: pointer; z-index: 100;
         }
         #shop-toggle:hover { background-color: #e68a00; }
 
         #shop-sidebar {
-            position: fixed; top: 0; right: -350px; 
-            width: 300px; height: 100vh; background-color: #1a1a1a;
-            border-left: 2px solid #333; transition: right 0.3s ease;
-            padding: 20px; box-sizing: border-box; z-index: 50;
-            display: flex; flex-direction: column; gap: 15px;
+            position: fixed; top: 0; right: -350px; width: 300px; height: 100vh;
+            background-color: #1a1a1a; border-left: 2px solid #333;
+            transition: right 0.3s ease; padding: 20px; box-sizing: border-box;
+            z-index: 50; display: flex; flex-direction: column; gap: 15px;
         }
         #shop-sidebar.open { right: 0; }
         
         .shop-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 10px;}
         .shop-btn {
             background-color: #333; color: white; border: 1px solid #555;
-            padding: 15px; border-radius: 5px; cursor: pointer; text-align: left;
-            transition: 0.2s;
+            padding: 15px; border-radius: 5px; cursor: pointer; text-align: left; transition: 0.2s;
         }
         .shop-btn:hover { background-color: #444; border-color: #4CAF50; }
         .shop-btn:disabled { background-color: #222; color: #666; border-color: #333; cursor: not-allowed; }
@@ -121,26 +90,20 @@
         .system-btn {
             background-color: #2a2a2a; color: white; border: 1px solid #444;
             padding: 10px; border-radius: 5px; cursor: pointer; text-align: center;
-            transition: 0.2s; font-size: 14px;
+            transition: 0.2s; font-size: 14px; margin-top: 5px;
         }
         .system-btn:hover { background-color: #3a3a3a; }
-        .danger-btn {
-            background-color: #4a1a1a; color: #ffaaaa; border-color: #ff5555;
-        }
+        .danger-btn { background-color: #4a1a1a; color: #ffaaaa; border-color: #ff5555; }
         .danger-btn:hover { background-color: #6a1a1a; }
 
         .typed-letter { color: #4CAF50; }
         
-        #save-notify {
-            position: absolute; top: 70px; right: 80px;
-            color: #888; font-size: 12px; opacity: 0; transition: opacity 0.5s;
-        }
+        #save-notify { position: absolute; top: 70px; right: 80px; color: #888; font-size: 12px; opacity: 0; transition: opacity 0.5s; }
 
         /* Modals */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); z-index: 1000;
-            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
         }
         .modal-box {
             background: #222; padding: 30px; border-radius: 10px; border: 2px solid #444;
@@ -156,10 +119,8 @@
         /* Floating Particle Animation */
         .floating-particle {
             position: absolute; color: #4CAF50; font-size: 28px; font-weight: bold;
-            pointer-events: none; z-index: 500; animation: floatUp 1s ease-out forwards;
-            text-shadow: 0px 0px 5px #000;
+            pointer-events: none; z-index: 500; animation: floatUp 1s ease-out forwards; text-shadow: 0px 0px 5px #000;
         }
-
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
@@ -171,6 +132,16 @@
     <div id="cheater-bar">You have cheated by using admin mode!</div>
 
     <button id="admin-btn" onclick="toggleAdminMode()">admin test</button>
+
+    <div id="name-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color: white;">Welcome to Potato Typer!</h3>
+            <p style="color: #ccc; font-size: 14px;">What is your name, farmer?</p>
+            <input type="text" id="name-input" class="modal-input" placeholder="Enter name..." autocomplete="off">
+            <button onclick="submitName()" class="system-btn" style="width: 200px; font-size: 18px; margin-top: 15px;">Start Typing</button>
+            <div id="name-error" style="color: #ff5555; font-size: 14px; margin-top: 10px; display: none;">Please choose an appropriate name!</div>
+        </div>
+    </div>
 
     <div id="admin-modal" class="modal-overlay">
         <div class="modal-box">
@@ -191,7 +162,7 @@
     <div id="restart-modal" class="modal-overlay">
         <div class="modal-box">
             <h3>WARNING: WIPE SAVE</h3>
-            <p style="color: #ccc; margin-bottom: 20px;">Are you absolutely sure? This will delete all your money, AI pieces, and remove the cheater mark. You cannot undo this!</p>
+            <p style="color: #ccc; margin-bottom: 20px;">Are you absolutely sure? This will delete all your progress. You cannot undo this!</p>
             <button onclick="confirmRestart()" style="background-color: #ff3333; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; font-weight: bold;">Yes, Delete Everything</button>
             <button onclick="closeRestartModal()" style="background-color: #555; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-left: 10px;">Cancel</button>
         </div>
@@ -236,7 +207,7 @@
 
     <div id="game-wrapper">
         <div id="player-screen" class="screen-half">
-            <h2>You</h2>
+            <h2 id="player-title">You</h2>
             <div id="word-display" class="word-display">Loading...</div>
             <img id="player-potato" class="potato-img" src="potato.png" alt="A glorious potato">
             <input type="text" id="typing-input" class="typing-input" placeholder="Type here..." autocomplete="off" autofocus>
@@ -255,19 +226,24 @@
         const words = [
             "potato", "spud", "french fries", "tater tot", "mashed", 
             "keyboard", "typing", "javascript", "developer", "awesome",
-            "crispy", "hashbrown", "starch", "yummy", "farming"
+            "crispy", "hashbrown", "starch", "yummy", "farming",
+            // Minecraft terms added here!
+            "creeper", "diamond pickaxe", "obsidian", "redstone", "enderman", 
+            "nether", "ghast", "zombie", "skeleton", "iron block", "gold ingot", 
+            "emerald", "crafting table", "furnace", "steve", "alex", "village", 
+            "stronghold", "nether portal", "ender dragon", "survival", "creative"
         ];
         
+        // Expanded to include bad words filter for player names
+        const badWords = ["dick", "fuck", "bitch", "shit", "ass", "crap"];
+        
+        let playerName = "";
         let money = 0;
         let moneyPerWord = 5;
-        let currentWord = "";
         
-        const moneyUpgrades = [
-            { cost: 100, newAmount: 10 },
-            { cost: 200, newAmount: 20 },
-            { cost: 500, newAmount: 30 }
-        ];
+        // Math logic for Better Potatoes cap ($100 max)
         let currentMoneyUpgradeLevel = 0;
+        const MAX_MONEY_LEVEL = 10; 
 
         let aiPieces = 0;
         let aiSpeed = 1; 
@@ -284,16 +260,46 @@
         let pendingMoneyVal = 0;
         const MAX_MONEY = 100000000000000000;
 
-        const moneyDisplay = document.getElementById("money");
         const moneyContainer = document.getElementById("money-container");
         const aiPiecesDisplay = document.getElementById("ai-pieces");
         const wordDisplay = document.getElementById("word-display");
         const typingInput = document.getElementById("typing-input");
 
+        // --- MATH FUNCTIONS FOR UPGRADES ---
+        function getNextMoneyAmount() {
+            return (currentMoneyUpgradeLevel + 1) * 10;
+        }
+
+        function getMoneyUpgradeCost() {
+            return (currentMoneyUpgradeLevel + 1) * 100;
+        }
+
+        // --- NAME SETUP ---
+        function submitName() {
+            const inputName = document.getElementById("name-input").value.trim();
+            const lowerName = inputName.toLowerCase();
+            
+            // Check for blanks and bad words
+            if (inputName === "") return;
+            let isBad = badWords.some(word => lowerName.includes(word));
+
+            if (isBad) {
+                document.getElementById("name-error").style.display = "block";
+            } else {
+                playerName = inputName;
+                document.getElementById("name-modal").style.display = "none";
+                document.getElementById("player-title").textContent = playerName + "'s Farm";
+                saveGame();
+                typingInput.focus();
+            }
+        }
+
         // --- SAVE / LOAD / SYSTEM ---
         function saveGame() {
+            if (!playerName) return; // Don't save if they haven't picked a name yet
+            
             const gameData = {
-                money: money, moneyPerWord: moneyPerWord,
+                playerName: playerName, money: money, moneyPerWord: moneyPerWord,
                 currentMoneyUpgradeLevel: currentMoneyUpgradeLevel,
                 aiPieces: aiPieces, aiSpeed: aiSpeed,
                 aiUnlocked: aiUnlocked, hasCheated: hasCheated
@@ -309,6 +315,7 @@
             const savedData = localStorage.getItem("potatoTyperSave");
             if (savedData) {
                 const gameData = JSON.parse(savedData);
+                playerName = gameData.playerName || "";
                 money = gameData.money || 0;
                 moneyPerWord = gameData.moneyPerWord || 5;
                 currentMoneyUpgradeLevel = gameData.currentMoneyUpgradeLevel || 0;
@@ -317,16 +324,11 @@
                 aiUnlocked = gameData.aiUnlocked || false;
                 hasCheated = gameData.hasCheated || false;
 
-                if (hasCheated) { document.getElementById("cheater-bar").style.display = "block"; }
-
-                if (currentMoneyUpgradeLevel < moneyUpgrades.length) {
-                    const nextUpgrade = moneyUpgrades[currentMoneyUpgradeLevel];
-                    document.getElementById("cost-upgrade-money").textContent = "$" + nextUpgrade.cost;
-                    document.getElementById("desc-upgrade-money").textContent = "Increases money per word to $" + nextUpgrade.newAmount + ".";
-                } else {
-                    document.getElementById("cost-upgrade-money").textContent = "MAXED";
-                    document.getElementById("desc-upgrade-money").textContent = "Maximum potato profits reached.";
+                if (playerName !== "") {
+                    document.getElementById("player-title").textContent = playerName + "'s Farm";
                 }
+
+                if (hasCheated) document.getElementById("cheater-bar").style.display = "block";
 
                 if (aiUnlocked) {
                     document.getElementById("btn-buy-piece").style.display = "none";
@@ -341,19 +343,29 @@
                     document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
                 }
             }
+            
+            // Check if we need to ask for name
+            if (!playerName) {
+                document.getElementById("name-modal").style.display = "flex";
+                document.getElementById("name-input").focus();
+            } else {
+                typingInput.focus();
+            }
         }
 
         setInterval(saveGame, 5000);
 
-        // System Control Functions
         function exportSave() {
             saveGame();
             const savedData = localStorage.getItem("potatoTyperSave");
             const blob = new Blob([savedData], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
-            a.href = url;
-            a.download = "potato_typer_save.json";
+            
+            // Replaces spaces/weird characters with underscores to keep the file name clean
+            let safeName = playerName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            a.download = `${safeName}_${money}_save.json`;
+            
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -369,35 +381,27 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     localStorage.setItem("potatoTyperSave", JSON.stringify(data));
-                    location.reload(); // Quickest way to safely refresh everything
-                } catch (err) {
-                    alert("Invalid save file!");
-                }
+                    location.reload(); 
+                } catch (err) { alert("Invalid save file!"); }
             };
             reader.readAsText(file);
             event.target.value = ''; 
         }
 
         function showRestartModal() { document.getElementById("restart-modal").style.display = "flex"; }
-        function closeRestartModal() { 
-            document.getElementById("restart-modal").style.display = "none"; 
-            typingInput.focus();
-        }
+        function closeRestartModal() { document.getElementById("restart-modal").style.display = "none"; typingInput.focus(); }
         function confirmRestart() {
             localStorage.removeItem("potatoTyperSave");
-            location.reload(); // Completely restarts the game from scratch
+            location.reload(); 
         }
 
         // --- ADMIN SYSTEM ---
         function toggleAdminMode() {
             if (isAdmin) {
-                isAdmin = false;
-                document.getElementById("admin-btn").textContent = "admin test";
-                moneyContainer.classList.remove("admin-active");
-                hasCheated = true;
+                isAdmin = false; document.getElementById("admin-btn").textContent = "admin test";
+                moneyContainer.classList.remove("admin-active"); hasCheated = true;
                 document.getElementById("cheater-bar").style.display = "block";
-                saveGame();
-                updateUI();
+                saveGame(); updateUI();
             } else {
                 document.getElementById("admin-modal").style.display = "flex";
                 document.getElementById("admin-pass-input").focus();
@@ -406,46 +410,32 @@
 
         document.getElementById("admin-pass-input").addEventListener("keydown", function(e) {
             if (isLockedOut) { e.preventDefault(); return; }
-
             if (e.key === "Enter" && e.shiftKey) {
                 e.preventDefault();
                 if (this.value === "Ctrl + W") {
-                    isAdmin = true;
-                    this.value = "";
-                    adminAttempts = 0;
+                    isAdmin = true; this.value = ""; adminAttempts = 0;
                     document.getElementById("admin-modal").style.display = "none";
                     document.getElementById("admin-btn").textContent = "Exit Admin Mode";
-                    moneyContainer.classList.add("admin-active");
-                    typingInput.focus();
+                    moneyContainer.classList.add("admin-active"); typingInput.focus();
                 } else {
-                    adminAttempts++;
-                    this.value = "";
+                    adminAttempts++; this.value = "";
                     if (adminAttempts >= 3) lockoutAdmin();
                 }
             } else if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                adminAttempts++;
-                this.value = "";
+                e.preventDefault(); adminAttempts++; this.value = "";
                 if (adminAttempts >= 3) lockoutAdmin();
             }
         });
 
         function lockoutAdmin() {
-            isLockedOut = true;
-            document.getElementById("admin-pass-input").disabled = true;
+            isLockedOut = true; document.getElementById("admin-pass-input").disabled = true;
             document.getElementById("lockout-msg").style.display = "block";
-            
-            let timeLeft = 60;
-            const timerSpan = document.getElementById("lockout-timer");
+            let timeLeft = 60; const timerSpan = document.getElementById("lockout-timer");
             timerSpan.textContent = timeLeft;
-
             const countdown = setInterval(() => {
-                timeLeft--;
-                timerSpan.textContent = timeLeft;
+                timeLeft--; timerSpan.textContent = timeLeft;
                 if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    isLockedOut = false;
-                    adminAttempts = 0;
+                    clearInterval(countdown); isLockedOut = false; adminAttempts = 0;
                     document.getElementById("admin-pass-input").disabled = false;
                     document.getElementById("lockout-msg").style.display = "none";
                     document.getElementById("admin-pass-input").focus();
@@ -456,19 +446,15 @@
         function openMoneyEditor() {
             if (!isAdmin) return;
             moneyContainer.innerHTML = `Money: $<input type="text" id="money-edit-input" value="${money}">`;
-            const editInput = document.getElementById("money-edit-input");
-            editInput.focus();
-
+            const editInput = document.getElementById("money-edit-input"); editInput.focus();
             editInput.addEventListener("input", function() {
                 let val = this.value.replace(/[^0-9]/g, '');
                 if (val !== "" && parseInt(val, 10) > MAX_MONEY) val = MAX_MONEY.toString();
                 this.value = val;
             });
-
             editInput.addEventListener("keydown", function(e) {
                 if (e.key === "Enter") {
-                    let val = parseInt(this.value, 10);
-                    if (isNaN(val)) val = money;
+                    let val = parseInt(this.value, 10); if (isNaN(val)) val = money;
                     pendingMoneyVal = val;
                     document.getElementById("admin-confirm-modal").style.display = "flex";
                     document.getElementById("admin-confirm-input").value = "";
@@ -480,23 +466,18 @@
         document.getElementById("admin-confirm-input").addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 if (this.value === "$Give_me_the_money") {
-                    money = pendingMoneyVal;
-                    document.getElementById("admin-confirm-modal").style.display = "none";
-                    updateUI();
-                    saveGame();
-                    typingInput.focus();
+                    money = pendingMoneyVal; document.getElementById("admin-confirm-modal").style.display = "none";
+                    updateUI(); saveGame(); typingInput.focus();
                 } else {
                     document.getElementById("admin-confirm-modal").style.display = "none";
-                    updateUI();
-                    typingInput.focus();
+                    updateUI(); typingInput.focus();
                 }
             }
         });
 
-        // Close Modals on background click
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', function(e) {
-                if (e.target === this) {
+                if (e.target === this && this.id !== "name-modal") {
                     this.style.display = "none";
                     if (this.id === "admin-confirm-modal") updateUI();
                     typingInput.focus();
@@ -507,22 +488,15 @@
         // --- FLOATING PARTICLES ---
         function spawnParticle(amount, isAI) {
             const particle = document.createElement("div");
-            particle.className = "floating-particle";
-            particle.textContent = "+$" + amount.toLocaleString();
-            
-            const targetId = isAI ? "ai-potato" : "player-potato";
-            const targetEl = document.getElementById(targetId);
-            
+            particle.className = "floating-particle"; particle.textContent = "+$" + amount.toLocaleString();
+            const targetEl = document.getElementById(isAI ? "ai-potato" : "player-potato");
             if (targetEl) {
                 const rect = targetEl.getBoundingClientRect();
-                const offsetX = (Math.random() - 0.5) * 80; 
-                const offsetY = (Math.random() - 0.5) * 40;
+                const offsetX = (Math.random() - 0.5) * 80; const offsetY = (Math.random() - 0.5) * 40;
                 particle.style.left = (rect.left + (rect.width / 2) - 20 + offsetX) + "px";
                 particle.style.top = (rect.top + offsetY) + "px";
             }
-            
-            document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 1000);
+            document.body.appendChild(particle); setTimeout(() => particle.remove(), 1000);
         }
 
         // --- CORE GAMEPLAY ---
@@ -532,20 +506,18 @@
         }
 
         typingInput.addEventListener("keydown", function(event) {
+            if (!playerName) return; // Stop typing if they haven't picked a name
             if (event.key === "Enter") {
                 const typedText = typingInput.value.trim().toLowerCase();
                 if (typedText === currentWord.toLowerCase()) {
-                    addMoney(moneyPerWord);
-                    spawnParticle(moneyPerWord, false); 
-                    getNewWord();
+                    addMoney(moneyPerWord); spawnParticle(moneyPerWord, false); getNewWord();
                 }
                 typingInput.value = "";
             }
         });
 
         function addMoney(amount) {
-            money += amount;
-            if (money > MAX_MONEY) money = MAX_MONEY;
+            money += amount; if (money > MAX_MONEY) money = MAX_MONEY;
             updateUI();
         }
 
@@ -556,59 +528,44 @@
             
             aiPiecesDisplay.textContent = aiPieces;
             
-            document.getElementById("btn-upgrade-money").disabled = 
-                (currentMoneyUpgradeLevel < moneyUpgrades.length) ? (money < moneyUpgrades[currentMoneyUpgradeLevel].cost) : true;
+            if (currentMoneyUpgradeLevel < MAX_MONEY_LEVEL) {
+                document.getElementById("cost-upgrade-money").textContent = "$" + getMoneyUpgradeCost();
+                document.getElementById("desc-upgrade-money").textContent = "Increases money per word to $" + getNextMoneyAmount() + ".";
+                document.getElementById("btn-upgrade-money").disabled = (money < getMoneyUpgradeCost());
+            } else {
+                document.getElementById("cost-upgrade-money").textContent = "MAXED";
+                document.getElementById("desc-upgrade-money").textContent = "Maximum potato profits reached ($100).";
+                document.getElementById("btn-upgrade-money").disabled = true;
+            }
             
-            document.getElementById("btn-buy-piece").disabled = 
-                (!aiUnlocked) ? (money < getAIPieceCost()) : true;
-
-            document.getElementById("btn-upgrade-ai").disabled = 
-                (money < getAISpeedCost());
+            document.getElementById("btn-buy-piece").disabled = (!aiUnlocked) ? (money < getAIPieceCost()) : true;
+            document.getElementById("btn-upgrade-ai").disabled = (money < getAISpeedCost());
         }
 
         // --- SHOP LOGIC ---
         function toggleShop() { document.getElementById("shop-sidebar").classList.toggle("open"); }
 
         function buyMoneyUpgrade() {
-            if (currentMoneyUpgradeLevel >= moneyUpgrades.length) return;
-            const upgrade = moneyUpgrades[currentMoneyUpgradeLevel];
+            if (currentMoneyUpgradeLevel >= MAX_MONEY_LEVEL) return;
+            const cost = getMoneyUpgradeCost();
             
-            if (money >= upgrade.cost) {
-                money -= upgrade.cost;
-                moneyPerWord = upgrade.newAmount;
+            if (money >= cost) {
+                money -= cost;
+                moneyPerWord = getNextMoneyAmount();
                 currentMoneyUpgradeLevel++;
-                
-                if (currentMoneyUpgradeLevel < moneyUpgrades.length) {
-                    const nextUpgrade = moneyUpgrades[currentMoneyUpgradeLevel];
-                    document.getElementById("cost-upgrade-money").textContent = "$" + nextUpgrade.cost;
-                    document.getElementById("desc-upgrade-money").textContent = "Increases money per word to $" + nextUpgrade.newAmount + ".";
-                } else {
-                    document.getElementById("cost-upgrade-money").textContent = "MAXED";
-                    document.getElementById("desc-upgrade-money").textContent = "Maximum potato profits reached.";
-                    document.getElementById("btn-upgrade-money").disabled = true;
-                }
-                updateUI();
-                saveGame();
+                updateUI(); saveGame();
             }
         }
 
         function getAIPieceCost() { return (aiPieces + 1) * 1000; }
 
         function buyAIPiece() {
-            if (aiUnlocked) return;
-            const cost = getAIPieceCost();
-            
+            if (aiUnlocked) return; const cost = getAIPieceCost();
             if (money >= cost) {
-                money -= cost;
-                aiPieces++;
-                
-                if (aiPieces >= 100) {
-                    unlockAI();
-                } else {
-                    document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
-                }
-                updateUI();
-                saveGame();
+                money -= cost; aiPieces++;
+                if (aiPieces >= 100) unlockAI();
+                else document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
+                updateUI(); saveGame();
             }
         }
 
@@ -617,75 +574,68 @@
         function buyAISpeed() {
             const cost = getAISpeedCost();
             if (money >= cost) {
-                money -= cost;
-                aiSpeed++;
+                money -= cost; aiSpeed++;
                 document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost();
                 document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed + 1) + " letters/sec.";
                 document.getElementById("ai-speed-display").textContent = aiSpeed;
-                startAILoop(); 
-                updateUI();
-                saveGame();
+                startAILoop(); updateUI(); saveGame();
             }
         }
 
         // --- AI LOGIC ---
         function unlockAI() {
-            aiUnlocked = true;
-            document.getElementById("btn-buy-piece").style.display = "none"; 
+            aiUnlocked = true; document.getElementById("btn-buy-piece").style.display = "none"; 
             document.getElementById("btn-upgrade-ai").style.display = "block"; 
             document.getElementById("ai-screen").style.display = "flex";
-            getNewAIWord();
-            startAILoop();
+            getNewAIWord(); startAILoop();
         }
 
         function getNewAIWord() {
             aiCurrentWord = words[Math.floor(Math.random() * words.length)];
-            aiTypedIndex = 0;
-            renderAIWord();
+            aiTypedIndex = 0; renderAIWord();
         }
 
         function renderAIWord() {
             const typedPart = aiCurrentWord.substring(0, aiTypedIndex);
             const untypedPart = aiCurrentWord.substring(aiTypedIndex);
-            document.getElementById("ai-word-display").innerHTML = 
-                `<span class="typed-letter">${typedPart}</span>${untypedPart}`;
+            document.getElementById("ai-word-display").innerHTML = `<span class="typed-letter">${typedPart}</span>${untypedPart}`;
         }
 
         function startAILoop() {
-            clearInterval(aiInterval);
-            const delay = 1000 / aiSpeed; 
-            
+            clearInterval(aiInterval); const delay = 1000 / aiSpeed; 
             aiInterval = setInterval(() => {
-                aiTypedIndex++;
-                renderAIWord();
-                
+                aiTypedIndex++; renderAIWord();
                 if (aiTypedIndex >= aiCurrentWord.length) {
-                    addMoney(moneyPerWord); 
-                    spawnParticle(moneyPerWord, true); 
+                    addMoney(moneyPerWord); spawnParticle(moneyPerWord, true); 
                     setTimeout(getNewAIWord, 200); 
                 }
             }, delay);
         }
 
         // Init Game
-        loadGame();
-        getNewWord();
-        updateUI();
+        loadGame(); getNewWord(); updateUI();
         
-        // Return focus to input when clicking outside the shop
+        // Return focus to input when clicking outside
         document.addEventListener('click', function(event) {
+            if (!playerName) return; // Do not pull focus if name isn't set
             const sidebar = document.getElementById('shop-sidebar');
             const toggle = document.getElementById('shop-toggle');
             if (!sidebar.contains(event.target) && event.target !== toggle && !event.target.classList.contains('shop-btn') && !event.target.classList.contains('system-btn') && !event.target.closest('.modal-box')) {
                 sidebar.classList.remove('open');
-                if(!document.getElementById("admin-modal").style.display || document.getElementById("admin-modal").style.display === "none") {
-                    if(!document.getElementById("admin-confirm-modal").style.display || document.getElementById("admin-confirm-modal").style.display === "none"){
-                        if(!document.getElementById("restart-modal").style.display || document.getElementById("restart-modal").style.display === "none"){
-                            typingInput.focus();
-                        }
-                    }
-                }
+                
+                // Only refocus if modals are closed
+                let modalsOpen = false;
+                document.querySelectorAll('.modal-overlay').forEach(m => {
+                    if (m.style.display === "flex") modalsOpen = true;
+                });
+                
+                if (!modalsOpen) typingInput.focus();
             }
+        });
+        
+        // Let enter key work on the name input box too
+        document.getElementById("name-input").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") submitName();
         });
     </script>
 </body>
