@@ -335,13 +335,23 @@
         setInterval(saveGame, 5000);
 
         function exportSave() {
-            saveGame(); const savedData = localStorage.getItem("potatoTyperSave");
+            saveGame(); 
+            const savedData = localStorage.getItem("potatoTyperSave");
             const blob = new Blob([savedData], { type: "application/json" });
-            const url = URL.createObjectURL(blob); const a = document.createElement("a");
+            const url = URL.createObjectURL(blob); 
+            const a = document.createElement("a");
+            
+            // THE FIXED LINE: Telling the button what to download!
+            a.href = url; 
+            
             let safeName = playerName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             a.download = `${safeName}_${money}_save.json`;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            URL.revokeObjectURL(url); typingInput.focus();
+            
+            document.body.appendChild(a); 
+            a.click(); 
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); 
+            typingInput.focus();
         }
 
         function importSave(event) {
