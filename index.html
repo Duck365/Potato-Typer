@@ -52,8 +52,6 @@
             border: 1px solid #4CAF50; width: 250px; text-align: right; outline: none;
         }
 
-        #ai-pieces-container { font-size: 16px; color: #aaa; margin-top: 5px; }
-
         .word-display { font-size: 48px; margin-bottom: 20px; letter-spacing: 2px; }
         .potato-img { width: 250px; height: auto; margin-bottom: 30px; }
         .typing-input {
@@ -172,7 +170,6 @@
 
     <div id="stats-container">
         <div id="money-container" onclick="openMoneyEditor()">Money: $<span id="money">0</span></div>
-        <div id="ai-pieces-container">AI Pieces: <span id="ai-pieces">0</span>/100</div>
         <div id="save-notify">Game Saved!</div>
     </div>
 
@@ -187,16 +184,16 @@
             <span class="btn-desc" id="desc-upgrade-money">Increases money per word to $10.</span>
         </button>
 
-        <button class="shop-btn" id="btn-buy-piece" onclick="buyAIPiece()">
-            <span class="btn-title">Piece of an AI Typer</span>
-            <span class="btn-cost" id="cost-buy-piece">$1000</span>
-            <span class="btn-desc">Collect 100 to build an AI assistant.</span>
+        <button class="shop-btn" id="btn-buy-ai" onclick="buyAI()">
+            <span class="btn-title">Hire AI Assistant</span>
+            <span class="btn-cost" id="cost-buy-ai">$10,000</span>
+            <span class="btn-desc">Purchases a robotic potato to type for you automatically.</span>
         </button>
 
         <button class="shop-btn" id="btn-upgrade-ai" onclick="buyAISpeed()" style="display: none;">
             <span class="btn-title">Overclock AI</span>
-            <span class="btn-cost" id="cost-upgrade-ai">$10000</span>
-            <span class="btn-desc" id="desc-upgrade-ai">Increase AI speed to 2 letters/sec.</span>
+            <span class="btn-cost" id="cost-upgrade-ai">$1,000</span>
+            <span class="btn-desc" id="desc-upgrade-ai">Increase AI speed to 1.5 letters/sec.</span>
         </button>
 
         <div style="margin-top: auto; border-top: 1px solid #444; padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
@@ -219,7 +216,7 @@
             <h2 style="color: #ff9800;">AI Assistant</h2>
             <div id="ai-word-display" class="word-display">Booting up...</div>
             <img id="ai-potato" class="potato-img" src="potato.png" alt="Robo potato" style="filter: grayscale(100%) sepia(100%) hue-rotate(180deg);">
-            <div style="color: #aaa;">AI typing at <span id="ai-speed-display">1</span> LPS</div>
+            <div style="color: #aaa;">AI typing at <span id="ai-speed-display">1.0</span> LPS</div>
         </div>
     </div>
 
@@ -241,11 +238,11 @@
         let money = 0;
         let moneyPerWord = 5;
         
+        // UNLIMITED MONEY UPGRADES
         let currentMoneyUpgradeLevel = 0;
-        const MAX_MONEY_LEVEL = 10; 
 
-        let aiPieces = 0;
         let aiSpeed = 1; 
+        let aiSpeedLevel = 0; // Tracks how many times we upgraded AI to do the math right
         let aiUnlocked = false;
 
         let aiCurrentWord = "";
@@ -260,13 +257,24 @@
         const MAX_MONEY = 100000000000000000;
 
         const moneyContainer = document.getElementById("money-container");
-        const aiPiecesDisplay = document.getElementById("ai-pieces");
         const wordDisplay = document.getElementById("word-display");
         const typingInput = document.getElementById("typing-input");
 
         // --- MATH FUNCTIONS FOR UPGRADES ---
         function getNextMoneyAmount() { return (currentMoneyUpgradeLevel + 1) * 10; }
         function getMoneyUpgradeCost() { return (currentMoneyUpgradeLevel + 1) * 100; }
+
+        // The New Slowing Cost Curve Logic
+        function getAISpeedCost() {
+            let cost = 1000;
+            for (let i = 0; i < aiSpeedLevel; i++) {
+                if (i < 3) cost *= 2;          // First 3 upgrades x2
+                else if (i < 6) cost *= 1.5;   // Next 3 upgrades x1.5
+                else if (i < 8) cost *= 1.25;  // Next 2 upgrades x1.25
+                else cost *= 1.2;              // Forever x1.20
+            }
+            return Math.floor(cost);
+        }
 
         // --- NAME SETUP ---
         function submitName() {
@@ -293,8 +301,7 @@
             const gameData = {
                 playerName: playerName, money: money, moneyPerWord: moneyPerWord,
                 currentMoneyUpgradeLevel: currentMoneyUpgradeLevel,
-                aiPieces: aiPieces, aiSpeed: aiSpeed,
-                aiUnlocked: aiUnlocked, hasCheated: hasCheated
+                aiSpeed: aiSpeed, aiSpeedLevel: aiSpeedLevel, aiUnlocked: aiUnlocked, hasCheated: hasCheated
             };
             localStorage.setItem("potatoTyperSave", JSON.stringify(gameData));
             
@@ -307,23 +314,23 @@
             if (savedData) {
                 const gameData = JSON.parse(savedData);
                 playerName = gameData.playerName || ""; money = gameData.money || 0;
-                moneyPerWord = gameData.moneyPerWord || 5; currentMoneyUpgradeLevel = gameData.currentMoneyUpgradeLevel || 0;
-                aiPieces = gameData.aiPieces || 0; aiSpeed = gameData.aiSpeed || 1;
+                moneyPerWord = gameData.moneyPerWord || 5; 
+                currentMoneyUpgradeLevel = gameData.currentMoneyUpgradeLevel || 0;
+                aiSpeed = gameData.aiSpeed || 1; 
+                aiSpeedLevel = gameData.aiSpeedLevel || 0; 
                 aiUnlocked = gameData.aiUnlocked || false; hasCheated = gameData.hasCheated || false;
 
                 if (playerName !== "") document.getElementById("player-title").textContent = playerName + "'s Farm";
                 if (hasCheated) document.getElementById("cheater-bar").style.display = "block";
 
                 if (aiUnlocked) {
-                    document.getElementById("btn-buy-piece").style.display = "none";
+                    document.getElementById("btn-buy-ai").style.display = "none";
                     document.getElementById("btn-upgrade-ai").style.display = "block";
                     document.getElementById("ai-screen").style.display = "flex";
-                    document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost();
-                    document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed + 1) + " letters/sec.";
-                    document.getElementById("ai-speed-display").textContent = aiSpeed;
+                    document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost().toLocaleString();
+                    document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed * 1.5).toFixed(1) + " letters/sec.";
+                    document.getElementById("ai-speed-display").textContent = aiSpeed.toFixed(1);
                     getNewAIWord(); startAILoop();
-                } else {
-                    document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
                 }
             }
             
@@ -340,13 +347,9 @@
             const blob = new Blob([savedData], { type: "application/json" });
             const url = URL.createObjectURL(blob); 
             const a = document.createElement("a");
-            
-            // THE FIXED LINE: Telling the button what to download!
             a.href = url; 
-            
             let safeName = playerName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             a.download = `${safeName}_${money}_save.json`;
-            
             document.body.appendChild(a); 
             a.click(); 
             document.body.removeChild(a);
@@ -480,58 +483,64 @@
 
         function updateUI() {
             if (!document.getElementById("money-edit-input")) moneyContainer.innerHTML = `Money: $<span id="money">${money.toLocaleString()}</span>`;
-            aiPiecesDisplay.textContent = aiPieces;
             
-            if (currentMoneyUpgradeLevel < MAX_MONEY_LEVEL) {
-                document.getElementById("cost-upgrade-money").textContent = "$" + getMoneyUpgradeCost();
-                document.getElementById("desc-upgrade-money").textContent = "Increases money per word to $" + getNextMoneyAmount() + ".";
-                document.getElementById("btn-upgrade-money").disabled = (money < getMoneyUpgradeCost());
+            // INFINITE POTATO UPGRADES
+            document.getElementById("cost-upgrade-money").textContent = "$" + getMoneyUpgradeCost().toLocaleString();
+            document.getElementById("desc-upgrade-money").textContent = "Increases money per word to $" + getNextMoneyAmount().toLocaleString() + ".";
+            document.getElementById("btn-upgrade-money").disabled = (money < getMoneyUpgradeCost());
+            
+            if (!aiUnlocked) {
+                document.getElementById("btn-buy-ai").disabled = (money < 10000);
             } else {
-                document.getElementById("cost-upgrade-money").textContent = "MAXED";
-                document.getElementById("desc-upgrade-money").textContent = "Maximum potato profits reached ($100).";
-                document.getElementById("btn-upgrade-money").disabled = true;
+                document.getElementById("btn-upgrade-ai").disabled = (money < getAISpeedCost());
             }
-            
-            document.getElementById("btn-buy-piece").disabled = (!aiUnlocked) ? (money < getAIPieceCost()) : true;
-            document.getElementById("btn-upgrade-ai").disabled = (money < getAISpeedCost());
         }
 
         // --- SHOP LOGIC ---
         function toggleShop() { document.getElementById("shop-sidebar").classList.toggle("open"); }
 
         function buyMoneyUpgrade() {
-            if (currentMoneyUpgradeLevel >= MAX_MONEY_LEVEL) return;
             const cost = getMoneyUpgradeCost();
-            if (money >= cost) { money -= cost; moneyPerWord = getNextMoneyAmount(); currentMoneyUpgradeLevel++; updateUI(); saveGame(); }
-        }
-
-        function getAIPieceCost() { return (aiPieces + 1) * 1000; }
-
-        function buyAIPiece() {
-            if (aiUnlocked) return; const cost = getAIPieceCost();
-            if (money >= cost) {
-                money -= cost; aiPieces++;
-                if (aiPieces >= 100) unlockAI(); else document.getElementById("cost-buy-piece").textContent = "$" + getAIPieceCost();
-                updateUI(); saveGame();
+            if (money >= cost) { 
+                money -= cost; 
+                moneyPerWord = getNextMoneyAmount(); 
+                currentMoneyUpgradeLevel++; 
+                updateUI(); 
+                saveGame(); 
             }
         }
 
-        function getAISpeedCost() { return aiSpeed * 10000; }
+        function buyAI() {
+            if (aiUnlocked) return; 
+            if (money >= 10000) {
+                money -= 10000; 
+                unlockAI(); 
+                updateUI(); 
+                saveGame();
+            }
+        }
 
         function buyAISpeed() {
             const cost = getAISpeedCost();
             if (money >= cost) {
-                money -= cost; aiSpeed++;
-                document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost();
-                document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed + 1) + " letters/sec.";
-                document.getElementById("ai-speed-display").textContent = aiSpeed;
-                startAILoop(); updateUI(); saveGame();
+                money -= cost; 
+                aiSpeedLevel++; 
+                aiSpeed *= 1.5; // Multiply speed by 1.5
+                
+                document.getElementById("cost-upgrade-ai").textContent = "$" + getAISpeedCost().toLocaleString();
+                document.getElementById("desc-upgrade-ai").textContent = "Increase AI speed to " + (aiSpeed * 1.5).toFixed(1) + " letters/sec.";
+                document.getElementById("ai-speed-display").textContent = aiSpeed.toFixed(1);
+                
+                startAILoop(); 
+                updateUI(); 
+                saveGame();
             }
         }
 
         // --- AI LOGIC ---
         function unlockAI() {
-            aiUnlocked = true; document.getElementById("btn-buy-piece").style.display = "none"; 
+            aiUnlocked = true; 
+            document.getElementById("btn-buy-ai").style.display = "none"; 
             document.getElementById("btn-upgrade-ai").style.display = "block"; 
             document.getElementById("ai-screen").style.display = "flex";
             getNewAIWord(); startAILoop();
